@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const [msg, setMsg] = React.useState('...loading');
+
+
+React.useEffect(() => {
+const apiUrl = process.env.REACT_APP_API_URL;
+fetch(`${apiUrl}/api/hello`)
+.then(r => r.json())
+.then(d => setMsg(d.message))
+.catch(e => setMsg('Ошибка: ' + e.message));
+}, []);
+
+
+return (
+<div style={{ padding: 20 }}>
+<h1>React frontend</h1>
+<p>Backend says: <b>{msg}</b></p>
+</div>
+);
 }
+
 
 export default App;
