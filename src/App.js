@@ -1,26 +1,37 @@
-import React from 'react';
+import { useState } from 'react';
 
+export default function NameForm() {
+  const [name, setName] = useState('');
+  const [msg, setMsg] = useState('');
 
-function App() {
-const [msg, setMsg] = React.useState('...loading');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/save-name`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+      });
+      const data = await res.json();
+      setMsg(data.message);
+      setName('');
+    } catch (err) {
+      console.log(err);
+      setMsg('Ошибка при отправке');
+    }
+  };
 
-
-React.useEffect(() => {
-const apiUrl = process.env.REACT_APP_API_URL;
-fetch(`${apiUrl}/api/hello`)
-.then(r => r.json())
-.then(d => setMsg(d.message))
-.catch(e => setMsg('Ошибка: ' + e.message));
-}, []);
-
-
-return (
-<div style={{ padding: 20 }}>
-<h1>React frontend</h1>
-<p>Backend says: <b>{msg}</b></p>
-</div>
-);
+  return (
+    <form onSubmit={handleSubmit}>
+      <input 
+        type="text" 
+        placeholder="Введите имя" 
+        value={name} 
+        onChange={(e) => setName(e.target.value)} 
+        required
+      />
+      <button type="submit">Сохранить</button>
+      {msg && <p>{msg}</p>}
+    </form>
+  );
 }
-
-
-export default App;
