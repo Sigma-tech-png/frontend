@@ -6,7 +6,7 @@ function HomePage() {
   useEffect(() => {
     const fetchName = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/get-name");
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/get-name`);
         if (!res.ok) {
           throw new Error("Ошибка при получении имени");
         }
